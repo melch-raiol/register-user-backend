@@ -1,25 +1,25 @@
 const express = require('express');
+const validateBodyRequire = require('./middlewares/validateBodyRequire');
+const schemaUser = require('./validation/schemaUser');
 
 const {
     listUsers,
     registerUsers,
     login,
-    //detailUsers,
     updateUser,
     deleteUsers,
 } = require('./controllers/users');
 
-const verifyUserAuthentication = require('./intermediaries/authentication');
+
 
 const routes = express();
 
-routes.post('/user', registerUsers);
+routes.post('/user', validateBodyRequire(schemaUser), registerUsers);
 routes.post('/login', login);
 
-routes.use(verifyUserAuthentication);
 
-routes.get('/user', listUsers);
-routes.put('/user/:id', updateUser);
+routes.get('/list', listUsers);
+routes.put('/user/:id', validateBodyRequire(schemaUser), updateUser);
 routes.delete('/user/:id', deleteUsers);
 
 module.exports = routes;
